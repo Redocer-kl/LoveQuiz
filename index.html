@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наш милый квиз ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .hearts {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .content {
+            padding: 30px 25px;
+        }
+        
+        .quiz-container {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .question h3 {
+            color: #ff758c;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .option {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            transform: translateY(-3px);
+            border-color: #ffafbd;
+            box-shadow: 0 5px 15px rgba(255, 175, 189, 0.3);
+        }
+        
+        .option.selected {
+            background: #fff0f3;
+            border-color: #ff7eb3;
+        }
+        
+        .option span {
+            margin-left: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 126, 179, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 126, 179, 0.4);
+        }
+        
+        button:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .result h2 {
+            color: #ff758c;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .result p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .love-score {
+            font-size: 60px;
+            color: #ff758c;
+            margin: 20px 0;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .message {
+            background: #fff0f3;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #ff758c;
+        }
+        
+        .progress {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .heart-icon {
+            color: #ff758c;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            margin-top: 50px;
+            animation: pulse 2s infinite;
+        }
+        
+        .dedication {
+            text-align: center;
+            font-style: italic;
+            color: #ff758c;
+            margin-top: 15px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+
+            <h1>Наш милый квиз ❤️</h1>
+            <p>Проверим, как хорошо ты знаешь наши отношения</p>
+        </div>
+        
+        <div class="content">
+            <div id="start-screen" class="active">
+                <div class="question">
+                    <h3>Привет, моя Танечка! 💕</h3>
+                    <p>Я создал этот милый квиз, чтобы напомнить тебе о наших особенных моментах, даже когда мы далеко друг от друга. Ответь на вопросы, и в конце тебя ждет сюрприз!</p>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button id="start-btn">Начать квиз! <i class="fas fa-heart"></i></button>
+                </div>
+                <div class="dedication">
+                    Для самой прекрасной девушки на свете
+                </div>
+            </div>
+            
+            <div id="quiz-screen">
+                <div class="progress">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div id="question-1" class="quiz-container">
+                    <div class="question">
+                        <h3><i class="fas fa-heart heart-icon"></i> Как мы впервые поцеловались?</h3>
+                    </div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <i class="fa-solid fa-mug-saucer"></i><span>В кафе / ресторане</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <i class="fa-solid fa-person-walking"></i><span>На прогулке / в парке</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <i class="fa-solid fa-house"></i><span>В гостях у тебя / у меня</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <i class="fa-solid fa-gear"></i><span>На колесе обозрения</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="question-2" class="quiz-container">
+                    <div class="question">
+                        <h3><i class="fas fa-heart heart-icon"></i> Какое твое любимое наше совместное воспоминание?</h3>
+                    </div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <i class="fas fa-sun"></i><span>Наши прогулки</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <i class="fas fa-gift"></i><span>Подарки друг другу</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <i class="fa-solid fa-face-kiss-wink-heart"></i><span>Наш первый поцелуй</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <i class="fas fa-laugh-beam"></i><span>Свое (жду в чате)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="question-3" class="quiz-container">
+                    <div class="question">
+                        <h3><i class="fas fa-heart heart-icon"></i> Что я люблю делать больше всего, когда мы вместе?</h3>
+                    </div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <i class="fas fa-film"></i><span>Смотреть фильмы вместе</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <i class="fas fa-utensils"></i><span>Готовить вкусную еду</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <i class="fas fa-hiking"></i><span>Гулять и обниматься на лавочке</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <i class="fa-solid fa-rug"></i></i><span>Лежать в обнимку под одеялом</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="question-4" class="quiz-container">
+                    <div class="question">
+                        <h3><i class="fas fa-heart heart-icon"></i> Какой подарок от меня тебе запомнился больше всего?</h3>
+                    </div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <i class="fas fa-ring"></i><span>Украшение</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <i class="fa-solid fa-child-dress"></i></i><span>Кукла</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <i class="fa-solid fa-otter"></i><span>Плюшевая игрушка</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <i class="fas fa-cat"></i><span>Что-то другое</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="question-5" class="quiz-container">
+                    <div class="question">
+                        <h3><i class="fas fa-heart heart-icon"></i> Что помогает нам сохранять наши отношения на расстоянии?</h3>
+                    </div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <i class="fas fa-video"></i><span>Наши ежедневные видеозвонки</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <i class="fas fa-envelope"></i><span>Миленькие сообщения и письма</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <i class="fas fa-calendar-check"></i><span>Планирование следующих встреч</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <i class="fas fa-heart"></i><span>Просто наша любовь и доверие</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button id="prev-btn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button id="next-btn">Далее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <div id="result-screen" class="result">
+                <h2>Результаты квиза! <i class="fas fa-heart"></i></h2>
+                <div class="love-score">100%</div>
+                <p>Ты идеально знаешь наши отношения! Я так счастлив, что у меня есть ты.</p>
+                
+                <div class="message">
+                    <p>Каждый день, проведенный вдали от тебя, только усиливает мою любовь. Помни, что ты - самое прекрасное, что случилось со мной. Скоро мы снова будем вместе!</p>
+                    <p>Люблю тебя больше всего на свете! Скучаю ❤️</p>
+                </div>
+                
+                <button id="restart-btn" class="pulse">Пройти еще раз! <i class="fas fa-redo"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы интерфейса
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const startBtn = document.getElementById('start-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const progressBar = document.getElementById('progress-bar');
+            
+            // Вопросы
+            const questions = document.querySelectorAll('.quiz-container');
+            const options = document.querySelectorAll('.option');
+            
+            let currentQuestion = 0;
+            const totalQuestions = questions.length;
+            const userAnswers = new Array(totalQuestions).fill(null);
+            
+            // Инициализация
+            function initQuiz() {
+                startScreen.classList.remove('active');
+                quizScreen.style.display = 'block';
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+            
+            // Показать вопрос
+            function showQuestion(index) {
+                questions.forEach(question => {
+                    question.classList.remove('active');
+                });
+                questions[index].classList.add('active');
+                
+                // Обновить состояние кнопок
+                prevBtn.disabled = (index === 0);
+                nextBtn.textContent = (index === totalQuestions - 1) ? 'Завершить' : 'Далее';
+                
+                // Выделить выбранный ответ, если он есть
+                if (userAnswers[index] !== null) {
+                    const selectedOption = questions[index].querySelector(`.option[data-value="${userAnswers[index]}"]`);
+                    if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                    }
+                }
+            }
+            
+            // Обновить прогресс
+            function updateProgress() {
+                const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Обработка выбора ответа
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionContainer = this.closest('.quiz-container');
+                    const questionId = questionContainer.id;
+                    const questionIndex = Array.from(questions).findIndex(q => q.id === questionId);
+                    
+                    // Убрать выделение с других вариантов
+                    questionContainer.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Выделить выбранный вариант
+                    this.classList.add('selected');
+                    
+                    // Сохранить ответ
+                    userAnswers[questionIndex] = this.getAttribute('data-value');
+                });
+            });
+            
+            // Следующий вопрос
+            nextBtn.addEventListener('click', function() {
+                // Проверка, что ответ выбран
+                if (userAnswers[currentQuestion] === null) {
+                    alert('Пожалуйста, выбери ответ!');
+                    return;
+                }
+                
+                if (currentQuestion < totalQuestions - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                    updateProgress();
+                } else {
+                    // Завершение квиза
+                    quizScreen.style.display = 'none';
+                    resultScreen.style.display = 'block';
+                }
+            });
+            
+            // Предыдущий вопрос
+            prevBtn.addEventListener('click', function() {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    showQuestion(currentQuestion);
+                    updateProgress();
+                }
+            });
+            
+            // Перезапуск квиза
+            restartBtn.addEventListener('click', function() {
+                currentQuestion = 0;
+                userAnswers.fill(null);
+                resultScreen.style.display = 'none';
+                quizScreen.style.display = 'block';
+                showQuestion(currentQuestion);
+                updateProgress();
+            });
+            
+            // Начать квиз
+            startBtn.addEventListener('click', initQuiz);
+        });
+    </script>
+</body>
+</html>
